@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentin Ratigniet — Data Analyst / Data Engineer</title>
+<meta name="description" content="Portfolio data de 19 projets bout en bout — SQL, dbt, Power BI, BigQuery, RAG. Chaque projet : problème métier, méthode, résultat chiffré.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Valentin Ratigniet — Data Analyst / Data Engineer">
+<meta property="og:description" content="Portfolio data de 19 projets bout en bout — SQL, dbt, Power BI, BigQuery, RAG. Chaque projet : problème métier, méthode, résultat chiffré.">
+<meta property="og:url" content="https://valentinratigniet-byte.github.io/">
+<meta property="og:locale" content="fr_FR">
+<meta name="theme-color" content="#137A8B">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23137A8B'/%3E%3Ctext x='32' y='45' font-family='monospace' font-size='34' font-weight='700' fill='%23E4A93C' text-anchor='middle'%3EV%3C/text%3E%3C/svg%3E">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+  :root{
+    --petrol:#137A8B;
+    --petrol-deep:#0C5563;
+    --petrol-soft:#A9CCD3;
+    --amber:#E4A93C;
+    --copper:#B4763B;
+    --ink:#1C2733;
+    --slate:#5E6B7A;
+    --line:#DCE2E8;
+    --bg:#F4F6F8;
+    --card:#FFFFFF;
+    --good:#2FA36B;
+    --warn:#E8A13A;
+    --bad:#D9534F;
+    --text:var(--ink);
+    --text-soft:var(--slate);
+    --accent:var(--petrol);
+    --accent-deep:var(--petrol-deep);
+    --cat-analyst:var(--petrol);
+    --cat-ba:var(--amber);
+    --cat-engineer:var(--petrol-deep);
+    --cat-ai:var(--copper);
+    --shadow: 0 1px 2px rgba(20,34,38,.04), 0 8px 24px rgba(20,34,38,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0E1519; --card:#17212A; --text:#E7ECF1; --text-soft:#93A0AB;
+      --line:#26323C; --accent:#3BA7B8; --accent-deep:#7FD4E0;
+      --amber:#EBB24E; --copper:#C98A50; --good:#45C78D; --warn:#EBB24E; --bad:#F0685E;
+      --petrol-deep:#5FB9C9;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 28px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0E1519; --card:#17212A; --text:#E7ECF1; --text-soft:#93A0AB;
+    --line:#26323C; --accent:#3BA7B8; --accent-deep:#7FD4E0;
+    --amber:#EBB24E; --copper:#C98A50; --good:#45C78D; --warn:#EBB24E; --bad:#F0685E;
+    --petrol-deep:#5FB9C9;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 28px rgba(0,0,0,.35);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0; background:var(--bg); color:var(--text);
+    font-family:"Manrope", ui-sans-serif, system-ui, sans-serif; line-height:1.55;
+    -webkit-font-smoothing:antialiased;}
+  .mono{font-family:"Fira Code", ui-monospace, Consolas, monospace;}
+  a{color:inherit;}
+  img{max-width:100%;}
+  ::selection{background:var(--amber); color:#1a1a1a;}
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important;}
+  }
+
+  /* ---- scroll progress ---- */
+  #progress{position:fixed; top:0; left:0; height:2.5px; width:0%; z-index:100;
+    background:linear-gradient(90deg, var(--accent), var(--amber));
+    transition:width .08s linear;}
+
+  /* ---- reveal : content is visible at rest always; JS only adds a short
+     settle-in slide (transform, never opacity) if it loads in time ---- */
+  .reveal{transform:translateY(10px); transition:transform .5s ease;}
+  .reveal.in{transform:translateY(0);}
+
+  /* ---- nav ---- */
+  nav{
+    position:sticky; top:0; z-index:20;
+    background:color-mix(in srgb, var(--bg) 86%, transparent);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{max-width:1120px; margin:0 auto; padding:14px 28px;
+    display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap;}
+  .brand{font-family:"Fira Code",monospace; font-weight:600; font-size:15px; color:var(--text);
+    text-decoration:none; display:flex; align-items:center; gap:8px;}
+  .brand .dot{width:9px; height:9px; border-radius:50%; background:var(--amber); display:inline-block;
+    box-shadow:0 0 0 4px color-mix(in srgb, var(--amber) 20%, transparent); animation:pulse 2.4s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 4px color-mix(in srgb, var(--amber) 20%, transparent);}
+    50%{box-shadow:0 0 0 7px color-mix(in srgb, var(--amber) 8%, transparent);}}
+  .nav-links{display:flex; gap:26px; font-size:14px;}
+  .nav-links a{text-decoration:none; color:var(--text-soft); font-weight:500; position:relative; padding-bottom:2px;}
+  .nav-links a::after{content:""; position:absolute; left:0; right:100%; bottom:-3px; height:2px;
+    background:var(--accent); transition:right .25s ease;}
+  .nav-links a:hover{color:var(--text);}
+  .nav-links a.active{color:var(--accent);}
+  .nav-links a.active::after{right:0;}
+
+  /* ---- hero ---- */
+  .hero{max-width:1120px; margin:0 auto; padding:76px 28px 44px; position:relative;}
+  .hero-canvas-wrap{position:absolute; inset:-20px 0 auto 0; height:480px; z-index:0; overflow:hidden;
+    -webkit-mask-image:linear-gradient(to bottom, black 55%, transparent 96%);
+    mask-image:linear-gradient(to bottom, black 55%, transparent 96%);}
+  #netcanvas{width:100%; height:100%; display:block;}
+  .hero > *{position:relative; z-index:1;}
+  .kicker{font-family:"Fira Code",monospace; font-size:13px; font-weight:500;
+    color:var(--accent); letter-spacing:.04em; margin-bottom:16px; display:flex; align-items:center; gap:8px;}
+  .kicker .lit{width:7px; height:7px; border-radius:50%; background:var(--amber); display:inline-block;}
+  h1.name{font-size:clamp(36px,5.6vw,58px); font-weight:800; line-height:1.06; margin:0 0 16px;
+    text-wrap:balance; letter-spacing:-.015em;}
+  .hero-lede{font-size:18px; color:var(--text-soft); max-width:62ch; margin:0 0 30px;}
+  .hero-actions{display:flex; gap:12px; flex-wrap:wrap; margin-bottom:40px;}
+  .btn{font-family:"Fira Code",monospace; font-size:13.5px; font-weight:500;
+    padding:12px 22px; border-radius:7px; text-decoration:none; display:inline-flex; align-items:center; gap:8px;
+    border:1px solid transparent; transition:transform .15s ease, box-shadow .15s ease, background .15s ease;}
+  .btn-primary{background:var(--accent); color:#fff; box-shadow:0 1px 2px rgba(0,0,0,.08);}
+  .btn-primary:hover{transform:translateY(-2px); box-shadow:0 8px 20px color-mix(in srgb, var(--accent) 35%, transparent);}
+  .btn-ghost{background:var(--card); color:var(--text); border-color:var(--line);}
+  .btn-ghost:hover{transform:translateY(-2px); border-color:var(--accent); box-shadow:var(--shadow);}
+
+  .hero-stats{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line);
+    border:1px solid var(--line); border-radius:12px; overflow:hidden; box-shadow:var(--shadow);}
+  .hstat{background:var(--card); padding:20px 20px; transition:background .2s ease;}
+  .hstat:hover{background:color-mix(in srgb, var(--accent) 5%, var(--card));}
+  .hstat .n{font-family:"Fira Code",monospace; font-weight:600; font-size:28px; color:var(--accent-deep);
+    font-variant-numeric:tabular-nums;}
+  .hstat .l{font-size:12.5px; color:var(--text-soft); margin-top:3px;}
+
+  /* ---- section shell ---- */
+  section{max-width:1120px; margin:0 auto; padding:72px 28px;}
+  section.alt{background:var(--card); max-width:none; border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+  section.alt > .inner{max-width:1120px; margin:0 auto; padding:0 28px;}
+  .eyebrow{font-family:"Fira Code",monospace; font-size:12px; font-weight:600; letter-spacing:.08em;
+    text-transform:uppercase; color:var(--accent); margin-bottom:10px;}
+  h2{font-size:clamp(23px,3vw,32px); font-weight:800; margin:0 0 14px; letter-spacing:-.015em; text-wrap:balance;}
+  .section-lede{font-size:15.5px; color:var(--text-soft); max-width:68ch; margin:0 0 36px;}
+
+  /* ---- ecosystem diagram (org-chart style) ---- */
+  .eco{margin-top:12px;}
+  .eco-root{
+    background:linear-gradient(135deg, var(--amber), color-mix(in srgb, var(--amber) 75%, var(--copper)));
+    color:#1a1408; border-radius:9px; padding:17px 22px;
+    max-width:360px; margin:0 auto; font-family:"Fira Code",monospace; font-size:13.5px; font-weight:600;
+    text-align:center; box-shadow:0 10px 26px color-mix(in srgb, var(--amber) 35%, transparent);
+  }
+  .eco-rail-wrap{max-width:920px; margin:0 auto; padding-top:28px; position:relative;}
+  .eco-rail-wrap::before{
+    content:""; position:absolute; top:0; left:50%; width:1px; height:28px;
+    background:var(--line); transform:translateX(-0.5px);
+  }
+  .eco-row{display:grid; grid-template-columns:repeat(auto-fit,minmax(148px,1fr)); gap:16px;
+    border-top:1px solid var(--line); padding-top:0; position:relative;}
+  .eco-node{background:var(--card); border:1px solid var(--line); border-radius:8px; padding:13px 15px;
+    font-size:13px; position:relative; transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;}
+  .eco-node::before{
+    content:""; position:absolute; top:-17px; left:50%; width:1px; height:17px; background:var(--line);
+  }
+  .eco-node:hover{transform:translateY(-3px); border-color:var(--accent); box-shadow:var(--shadow);}
+  .eco-node b{display:block; font-family:"Fira Code",monospace; font-size:12.5px; color:var(--accent-deep); margin-bottom:4px;}
+  .eco-node span{color:var(--text-soft); font-size:12px;}
+  .eco-caption{font-size:13.5px; color:var(--text-soft); margin-top:26px; max-width:64ch;}
+
+  /* ---- filters ---- */
+  .filters{display:flex; gap:9px; flex-wrap:wrap; margin-bottom:30px;}
+  .filter-btn{font-family:"Fira Code",monospace; font-size:12.5px; font-weight:500;
+    padding:9px 16px; border-radius:20px; border:1px solid var(--line); background:var(--card);
+    color:var(--text-soft); cursor:pointer; transition:all .15s ease; display:inline-flex; align-items:center; gap:7px;}
+  .filter-btn .dot{width:6px; height:6px; border-radius:50%; background:var(--catcolor, var(--text-soft));}
+  .filter-btn .count{opacity:.65; font-size:11px;}
+  .filter-btn:hover{border-color:var(--accent); transform:translateY(-1px);}
+  .filter-btn.active{background:var(--text); color:var(--bg); border-color:var(--text);}
+  .filter-btn.active .dot{background:var(--bg);}
+
+  /* ---- project grid ---- */
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(310px,1fr)); gap:18px;}
+  .pcard{background:var(--card); border:1px solid var(--line); border-left:3px solid var(--catcolor,var(--line));
+    border-radius:10px; padding:22px; display:flex; flex-direction:column; gap:12px; position:relative;
+    transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;}
+  .pcard.enter{animation:cardIn .35s ease both;}
+  .pcard:hover{transform:translateY(-4px); box-shadow:var(--shadow); border-color:color-mix(in srgb, var(--catcolor,var(--accent)) 55%, var(--line));}
+  @keyframes cardIn{from{transform:translateY(10px);} to{transform:translateY(0);}}
+  .pcard.featured{background:linear-gradient(180deg, color-mix(in srgb, var(--amber) 6%, var(--card)), var(--card) 40%);}
+  .pcard-top{display:flex; align-items:flex-start; justify-content:space-between; gap:10px;}
+  .pcard-num{font-family:"Fira Code",monospace; font-size:12px; color:var(--text-soft); font-weight:600;}
+  .featured-pill{font-family:"Fira Code",monospace; font-size:10px; font-weight:700; letter-spacing:.05em;
+    text-transform:uppercase; color:#1a1408; background:linear-gradient(135deg, var(--amber), color-mix(in srgb, var(--amber) 70%, var(--copper)));
+    padding:3px 9px; border-radius:20px; display:inline-flex; align-items:center; gap:4px;}
+  .pcard h3{font-size:16.5px; font-weight:700; margin:0; line-height:1.32;}
+  .pcard .cat-tag{font-family:"Fira Code",monospace; font-size:10.5px; font-weight:600; letter-spacing:.04em;
+    text-transform:uppercase; color:var(--catcolor,var(--accent));
+    background:color-mix(in srgb, var(--catcolor,var(--accent)) 14%, transparent);
+    padding:3px 8px; border-radius:4px; display:inline-block; width:fit-content;}
+  .pcard p{font-size:13.5px; color:var(--text-soft); margin:0; line-height:1.58;}
+  .pcard .result{font-size:13px; color:var(--good); font-weight:600; margin-top:2px; line-height:1.5;}
+  .pcard .result::before{content:"↳ "; opacity:.6;}
+  .pcard-tech{display:flex; flex-wrap:wrap; gap:6px; margin-top:auto; padding-top:4px;}
+  .pcard-tech span{font-family:"Fira Code",monospace; font-size:10.5px; color:var(--text-soft);
+    background:var(--bg); border:1px solid var(--line); padding:3px 7px; border-radius:4px;}
+  .pcard-links{display:flex; gap:16px; margin-top:2px; font-family:"Fira Code",monospace; font-size:12.5px;}
+  .pcard-links a{color:var(--accent); text-decoration:none; font-weight:500; transition:opacity .15s ease;}
+  .pcard-links a:hover{opacity:.7;}
+
+  /* ---- practices table ---- */
+  table.practices{width:100%; border-collapse:collapse; font-size:14px; margin-top:4px;}
+  table.practices tr{transition:background .15s ease;}
+  table.practices tr:hover{background:color-mix(in srgb, var(--accent) 4%, transparent);}
+  table.practices td{padding:17px 12px; border-top:1px solid var(--line); vertical-align:top;}
+  table.practices tr:first-child td{border-top:none;}
+  table.practices td.p-name{font-weight:700; width:26%; padding-left:0; color:var(--text);}
+  table.practices td.p-desc{color:var(--text-soft); padding-right:0;}
+
+  /* ---- footer ---- */
+  footer{border-top:1px solid var(--line); padding:44px 28px 36px;}
+  .footer-inner{max-width:1120px; margin:0 auto; display:flex; justify-content:space-between;
+    align-items:center; flex-wrap:wrap; gap:16px;}
+  .footer-inner .mono{font-size:12.5px; color:var(--text-soft);}
+  .footer-links{display:flex; gap:20px;}
+  .footer-links a{text-decoration:none; color:var(--text-soft); font-size:13px; font-weight:500; transition:color .15s ease;}
+  .footer-links a:hover{color:var(--accent);}
+
+  #totop{position:fixed; right:24px; bottom:24px; width:42px; height:42px; border-radius:50%;
+    background:var(--card); border:1px solid var(--line); display:flex; align-items:center; justify-content:center;
+    color:var(--text); text-decoration:none; box-shadow:var(--shadow); opacity:0; pointer-events:none;
+    transition:opacity .25s ease, transform .2s ease; z-index:19;}
+  #totop.show{opacity:1; pointer-events:auto;}
+  #totop:hover{transform:translateY(-3px); border-color:var(--accent);}
+
+  @media (max-width:640px){
+    .hero-stats{grid-template-columns:1fr 1fr;}
+    .nav-links{display:none;}
+    .hero-canvas-wrap{height:340px;}
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<nav>
+  <div class="nav-inner">
+    <a class="brand" href="#top"><span class="dot"></span>valentinratigniet-byte</a>
+    <div class="nav-links" id="navlinks">
+      <a href="#ecosysteme" data-sec="ecosysteme">Écosystème</a>
+      <a href="#projets" data-sec="projets">Projets</a>
+      <a href="#pratiques" data-sec="pratiques">Pratiques</a>
+      <a href="#contact" data-sec="contact">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<div id="top" class="hero">
+  <div class="hero-canvas-wrap"><canvas id="netcanvas"></canvas></div>
+  <div class="kicker"><span class="lit"></span>Analyste / Ingénieur Données</div>
+  <h1 class="name">Valentin Ratigniet</h1>
+  <p class="hero-lede">
+    Profil hybride — culture financière (Master Économie Appliquée + alternance Business
+    Analyst) et ingénierie de données. 19 projets qui ne sont pas une collection isolée :
+    un écosystème connecté où chaque brique réutilise la précédente.
+  </p>
+  <div class="hero-actions">
+    <a class="btn btn-primary" href="mailto:valentinratigniet@gmail.com">Me contacter</a>
+    <a class="btn btn-ghost" href="https://github.com/valentinratigniet-byte">GitHub ↗</a>
+  </div>
+  <div class="hero-stats">
+    <div class="hstat"><div class="n" data-count="19">19</div><div class="l">projets bout en bout</div></div>
+    <div class="hstat"><div class="n" data-count="15" data-suffix="/19">15/19</div><div class="l">avec CI vérifiée</div></div>
+    <div class="hstat"><div class="n" data-count="4">4</div><div class="l">domaines couverts</div></div>
+    <div class="hstat"><div class="n" data-count="100" data-suffix="%">100%</div><div class="l">résultats chiffrés, mesurés</div></div>
+  </div>
+</div>
+
+<section id="ecosysteme">
+  <div class="eyebrow reveal">Comment ça s'articule</div>
+  <h2 class="reveal">Un socle, pas 19 projets isolés</h2>
+  <p class="section-lede reveal">
+    Chaque flèche ci-dessous est une vraie dépendance technique, pas un simple ordre de
+    lecture. La base du Projet 07 irrigue six autres projets du portfolio.
+  </p>
+  <div class="eco reveal">
+    <div class="eco-root">07 · Base PostgreSQL — OLTP e-commerce, 3NF</div>
+    <div class="eco-rail-wrap">
+      <div class="eco-row">
+        <div class="eco-node"><b>08 · SQL analytique</b><span>fenêtres, cohortes, RFM</span></div>
+        <div class="eco-node"><b>09 · Dashboard Power BI</b><span>étoile, DAX, RLS</span></div>
+        <div class="eco-node"><b>10 · Pipeline ELT</b><span>dbt + Prefect</span></div>
+        <div class="eco-node"><b>11 · Gouvernance</b><span>dictionnaire + lignage</span></div>
+        <div class="eco-node"><b>13 · Entrepôt BigQuery</b><span>même étoile, cloud</span></div>
+        <div class="eco-node"><b>14 · Filiation</b><span>traçabilité interactive</span></div>
+      </div>
+    </div>
+  </div>
+  <p class="eco-caption reveal">
+    Le même schéma dimensionnel tourne deux fois : une fois en local (Power BI ↔ PostgreSQL,
+    Projet 09) et une fois dans le cloud (Power BI ↔ BigQuery, Projet 13) — la modélisation
+    ne dépend pas de l'infrastructure qui la porte.
+  </p>
+</section>
+
+<section class="alt" id="projets">
+  <div class="inner">
+    <div class="eyebrow reveal">Le portfolio</div>
+    <h2 class="reveal">19 projets, classés par compétence dominante</h2>
+    <p class="section-lede reveal">
+      Chaque carte : le problème posé, la méthode, un résultat chiffré — jamais une
+      affirmation sans preuve. <span class="featured-pill" style="vertical-align:1px;">★ vedette</span>
+    </p>
+    <div class="filters reveal" id="filters"></div>
+    <div class="grid" id="grid"></div>
+  </div>
+</section>
+
+<section id="pratiques">
+  <div class="eyebrow reveal">Discipline</div>
+  <h2 class="reveal">Bonnes pratiques appliquées sur tout le portfolio</h2>
+  <table class="practices reveal">
+    <tr><td class="p-name">Un repo = un projet</td><td class="p-desc">19 dépôts indépendants, chacun avec un README structuré (problème → méthode → résultats chiffrés → reproduction).</td></tr>
+    <tr><td class="p-name">Tests vérifiés par CI</td><td class="p-desc">dbt tests, tests qualité Python, asserts de réconciliation comptable, RLS testée avec les vrais rôles — 15 des 19 dépôts ont une CI GitHub Actions qui rejoue le pipeline à chaque push.</td></tr>
+    <tr><td class="p-name">Documentation vivante</td><td class="p-desc">Descriptions in-situ dans les modèles Power BI, dictionnaires de données générés — pas de doc qui se périme dans un coin.</td></tr>
+    <tr><td class="p-name">Secrets jamais commités</td><td class="p-desc"><code class="mono">.gitignore</code> systématique, clés de service hors repo, secrets lus depuis l'environnement.</td></tr>
+    <tr><td class="p-name">Moindre privilège</td><td class="p-desc">Comptes de service à droits scopés — IAM BigQuery : <code class="mono">dataEditor</code> + <code class="mono">jobUser</code>, jamais <code class="mono">Owner</code>.</td></tr>
+    <tr><td class="p-name">Reproductibilité</td><td class="p-desc">Scripts rejouables, environnements Docker/venv versionnés.</td></tr>
+  </table>
+</section>
+
+<footer id="contact">
+  <div class="footer-inner">
+    <span class="mono">© 2026 Valentin Ratigniet · Petrol &amp; Ambre</span>
+    <div class="footer-links">
+      <a href="mailto:valentinratigniet@gmail.com">Email</a>
+      <a href="https://github.com/valentinratigniet-byte">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<a href="#top" id="totop" aria-label="Remonter en haut">↑</a>
+
+<script>
+const PROJECTS = [
+  {n:'01', cat:'analyst', title:'Analyse des ventes e-commerce (Olist)', tag:'Data Analyst',
+   problem:"Une baisse de CA constatée — qualité de service dégradée, ou autre chose ?",
+   result:"97 % des clients ne commandent qu'une fois — le vrai problème est la rétention, pas la qualité.",
+   tech:['SQL','Power BI'], repo:'projet-01-analyse-ventes-ecommerce'},
+  {n:'02', cat:'analyst', title:'Nettoyage & qualité de données (NYC 311)', tag:'Data Analyst',
+   problem:"50k incidents municipaux : villes mal saisies, catégories manquantes, dates aberrantes.",
+   result:"8/8 tests PASS — villes non standardisées 46 280 → 0.",
+   tech:['Python','Pandas'], repo:'projet-02-pipeline-nettoyage-qualite'},
+  {n:'03', cat:'analyst', title:'Suivi de prix de jeux vidéo + web app', tag:'Data Analyst',
+   problem:"Repérer les meilleures affaires jeux vidéo sans dataset propre existant.",
+   result:"App déployée sur Render, rafraîchissement quotidien automatisé.",
+   tech:['Python','Flask'], repo:'projet-03-scraper-prix-jeux-dashboard', demo:'https://projet-03-scraper-prix-jeux-dashboard.onrender.com'},
+  {n:'06', cat:'analyst', title:'Automatisation de reporting Excel', tag:'Data Analyst',
+   problem:"Un rapport Excel mensuel refait à la main à chaque fois.",
+   result:"~38 h/an gagnées, documenté et chiffré.",
+   tech:['Python','Streamlit'], repo:'projet-06-automatisation-reporting-excel'},
+  {n:'08', cat:'analyst', title:'Bibliothèque SQL analytique', tag:'Data Analyst',
+   problem:"Démontrer une maîtrise SQL au-delà du SELECT simple.",
+   result:"16 requêtes : fenêtres, cohortes, RFM, CTE récursive, commentées.",
+   tech:['PostgreSQL'], repo:'projet-08-sql-analytique'},
+  {n:'09', cat:'analyst', title:'Dashboard exécutif Power BI', tag:'Data Analyst',
+   problem:"Donner une vue fiable et unique de la performance commerciale.",
+   result:"17 mesures DAX (YoY/YTD/MoM), RLS, documentation in-situ.",
+   tech:['Power BI','DAX'], repo:'projet-09-dashboard-powerbi'},
+  {n:'15', cat:'ba', title:'Reporting de gestion — écarts Budget/Réel', tag:'Contrôle de gestion', featured:true,
+   problem:"« CA réel 70,3 M€, Budget 71,6 M€ » ne dit rien — vendu moins, moins cher, ou pas les bonnes catégories ?",
+   result:"Écart total −1,9 % expliqué département par département (méthode Prix/Volume/Mix).",
+   tech:['Python','PostgreSQL','Excel'], repo:'projet-15-reporting-ecarts-cg'},
+  {n:'16', cat:'ba', title:'Business case — investissement', tag:'Contrôle de gestion', featured:true,
+   problem:"Un fournisseur promet de réduire les annulations — combien ça vaut, à partir de quand ?",
+   result:"NPV +36 081 €, IRR 22,4 % — go conditionnel motivé par la sensibilité, pas un chiffre aveugle.",
+   tech:['Python','Streamlit'], repo:'projet-16-business-case-investissement', demo:'https://projet-16-business-case-investissement-data.streamlit.app/'},
+  {n:'17', cat:'ba', title:'Rentabilité produit/client — ABC costing', tag:'Contrôle de gestion',
+   problem:"Un produit rentable en marge brute peut détruire de la valeur une fois les coûts indirects alloués.",
+   result:"9 produits sur 2000 à marge nette négative, invisible dans une répartition au prorata du CA.",
+   tech:['Python','PostgreSQL'], repo:'projet-17-rentabilite-produit-client'},
+  {n:'07', cat:'engineer', title:'Base de données e-commerce', tag:'Data Engineer',
+   problem:"Construire un socle opérationnel réutilisable par tous les autres projets.",
+   result:"Requêtes ~26× plus rapides, base réutilisée par 6 autres projets.",
+   tech:['PostgreSQL','Docker'], repo:'projet-07-base-ecommerce'},
+  {n:'04', cat:'engineer', title:'Entrepôt de données multi-sources', tag:'Data Engineer',
+   problem:"Croiser 3 sources hétérogènes sans infra cloud.",
+   result:"10 modèles dbt, 11 tests PASS, DuckDB local.",
+   tech:['DuckDB','dbt'], repo:'projet-04-entrepot-donnees-etl'},
+  {n:'10', cat:'engineer', title:'Pipeline ELT automatisé', tag:'Data Engineer',
+   problem:"Automatiser la chaîne source → entrepôt sans tout recharger à chaque fois.",
+   result:"28 tests dbt PASS, +928 lignes incrémentales, 0 doublon au 2ᵉ passage.",
+   tech:['dbt','Prefect'], repo:'projet-10-pipeline-elt'},
+  {n:'11', cat:'engineer', title:'Gouvernance & qualité des données', tag:'Data Engineer',
+   problem:"Sans gouvernance, personne ne sait ce que signifie une colonne.",
+   result:"28 tests qualité PASS, ownership et SLA documentés par table.",
+   tech:['dbt'], repo:'projet-11-gouvernance'},
+  {n:'14', cat:'engineer', title:'Filiation — traçabilité interactive', tag:'Data Engineer', featured:true,
+   problem:"Le lignage dbt est exact mais lu par des data engineers, pas par « d'où vient ce chiffre ? »",
+   result:"13 nœuds réels, 28 tests dbt affichés avec leur statut, lecture seule.",
+   tech:['dbt','JavaScript'], repo:'projet-14-filiation'},
+  {n:'12', cat:'engineer', title:'Dédoublonnage & golden record', tag:'Data Engineer',
+   problem:"Deux sources clients avec doublons, fautes de frappe, aucun identifiant fiable.",
+   result:"1280 → 813 golden records, précision 97,2 % / rappel 95,9 %.",
+   tech:['Python','rapidfuzz'], repo:'projet-12-nettoyage-standardisation-dedoublonnage'},
+  {n:'13', cat:'engineer', title:'Entrepôt central BigQuery', tag:'Data Engineer', featured:true,
+   problem:"La modélisation du Projet 09 tient-elle hors d'un environnement local ?",
+   result:"12/12 tests dbt PASS, IAM à privilège minimal, même étoile dans le cloud.",
+   tech:['BigQuery','dbt','Power BI'], repo:'projet-13-entrepot-central-bigquery'},
+  {n:'18', cat:'engineer', title:'Monitoring Eco2mix — infra live', tag:'Data Engineer', featured:true,
+   problem:"Aucun projet précédent ne prouve savoir exploiter une infra en prod sur un flux temps réel.",
+   result:"Pipeline qui tourne tout seul depuis le déploiement, RLS testée 6/6 cas réels.",
+   tech:['Python','Supabase','n8n','dbt'], repo:'projet-18-monitoring-energie-rte', demo:'https://valentinratigniet-byte.github.io/projet-18-monitoring-energie-rte/'},
+  {n:'19', cat:'engineer', title:'Plateforme data d\'entreprise', tag:'Data Engineer', featured:true,
+   problem:"Aucun projet précédent ne fait cohabiter plusieurs domaines métier hétérogènes dans un entrepôt gouverné.",
+   result:"51/51 tests dbt, réconciliation Factur-X 91 % structuré vs 44 % non structuré.",
+   tech:['dbt','PostgreSQL','SQL Server','MySQL','Airflow'], repo:'projet-19-plateforme-entreprise'},
+  {n:'05', cat:'ai', title:'Assistant d\'analyse financière (RAG/LLM)', tag:'IA / LLM', featured:true,
+   problem:"Un LLM seul hallucine des chiffres financiers plausibles mais faux.",
+   result:"Rappel de récupération 100 % (7/7), citations obligatoires, refus explicite mesuré.",
+   tech:['Python','Claude API','Streamlit'], repo:'projet-05-assistant-analyse-financiere-rag'},
+];
+
+const CATS = [
+  {key:'all', label:'Tout'},
+  {key:'analyst', label:'Data Analyst'},
+  {key:'ba', label:'Contrôle de gestion'},
+  {key:'engineer', label:'Data Engineer'},
+  {key:'ai', label:'IA / LLM'},
+];
+const CAT_VAR = {analyst:'--cat-analyst', ba:'--cat-ba', engineer:'--cat-engineer', ai:'--cat-ai'};
+
+const filtersEl = document.getElementById('filters');
+const gridEl = document.getElementById('grid');
+const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function countOf(key){ return key==='all' ? PROJECTS.length : PROJECTS.filter(p=>p.cat===key).length; }
+
+function renderFilters(){
+  filtersEl.innerHTML = CATS.map((c,i) => `
+    <button class="filter-btn ${i===0?'active':''}" data-cat="${c.key}"
+      style="${c.key!=='all' ? `--catcolor:var(${CAT_VAR[c.key]})` : ''}">
+      ${c.key!=='all' ? '<span class="dot"></span>' : ''}${c.label}
+      <span class="count">${countOf(c.key)}</span>
+    </button>`).join('');
+}
+
+function render(cat){
+  gridEl.innerHTML = PROJECTS
+    .filter(p => cat === 'all' || p.cat === cat)
+    .map((p,i) => `
+      <div class="pcard ${p.featured ? 'featured' : ''} ${reduced?'':'enter'}" style="--catcolor:var(${CAT_VAR[p.cat]}); animation-delay:${reduced?0:Math.min(i*18,150)}ms">
+        <div class="pcard-top">
+          <span class="pcard-num mono">Projet ${p.n}</span>
+          ${p.featured ? '<span class="featured-pill">★ vedette</span>' : ''}
+        </div>
+        <span class="cat-tag">${p.tag}</span>
+        <h3>${p.title}</h3>
+        <p>${p.problem}</p>
+        <p class="result">${p.result}</p>
+        <div class="pcard-tech">${p.tech.map(t => `<span>${t}</span>`).join('')}</div>
+        <div class="pcard-links">
+          <a href="https://github.com/valentinratigniet-byte/${p.repo}" target="_blank" rel="noopener">Repo ↗</a>
+          ${p.demo ? `<a href="${p.demo}" target="_blank" rel="noopener">Démo live ↗</a>` : ''}
+        </div>
+      </div>
+    `).join('');
+}
+
+renderFilters();
+render('all');
+
+filtersEl.addEventListener('click', e => {
+  const btn = e.target.closest('.filter-btn');
+  if(!btn) return;
+  filtersEl.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render(btn.dataset.cat);
+});
+
+/* ---- scroll progress ---- */
+const progressEl = document.getElementById('progress');
+function onScroll(){
+  const h = document.documentElement;
+  const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+  progressEl.style.width = scrolled + '%';
+  document.getElementById('totop').classList.toggle('show', h.scrollTop > 600);
+}
+document.addEventListener('scroll', onScroll, {passive:true});
+onScroll();
+
+/* ---- scroll-spy nav ---- */
+const navLinks = [...document.querySelectorAll('#navlinks a')];
+const secs = ['ecosysteme','projets','pratiques','contact'].map(id => document.getElementById(id));
+const spy = new IntersectionObserver((entries) => {
+  entries.forEach(en => {
+    if(en.isIntersecting){
+      navLinks.forEach(a => a.classList.toggle('active', a.dataset.sec === en.target.id));
+    }
+  });
+}, {rootMargin:'-40% 0px -50% 0px'});
+secs.forEach(s => s && spy.observe(s));
+
+/* ---- reveal on scroll ---- */
+const revealEls = document.querySelectorAll('.reveal');
+if(reduced){
+  revealEls.forEach(el => el.classList.add('in'));
+} else {
+  const ro = new IntersectionObserver((entries) => {
+    entries.forEach(en => { if(en.isIntersecting){ en.target.classList.add('in'); ro.unobserve(en.target); } });
+  }, {threshold:.15});
+  revealEls.forEach(el => ro.observe(el));
+}
+
+/* Stats are static in the HTML on purpose -- correct at rest, no count-up
+   that could show a wrong intermediate number if a preview/crawler grabs
+   the page before a JS animation finishes. */
+
+/* ---- hero network canvas ---- */
+(function(){
+  const canvas = document.getElementById('netcanvas');
+  const ctx = canvas.getContext('2d');
+  let w,h,dots=[];
+  const N = reduced ? 0 : 46;
+
+  function styleColor(name, fallback){
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
+  }
+
+  function resize(){
+    const wrap = canvas.parentElement;
+    w = canvas.width = wrap.clientWidth * devicePixelRatio;
+    h = canvas.height = wrap.clientHeight * devicePixelRatio;
+    canvas.style.width = wrap.clientWidth+'px';
+    canvas.style.height = wrap.clientHeight+'px';
+  }
+  function init(){
+    dots = Array.from({length:N}, () => ({
+      x: Math.random()*w, y: Math.random()*h,
+      vx: (Math.random()-0.5)*0.25*devicePixelRatio, vy: (Math.random()-0.5)*0.25*devicePixelRatio,
+      r: (Math.random()*1.6+1)*devicePixelRatio
+    }));
+  }
+  function frame(){
+    if(!reduced) requestAnimationFrame(frame);
+    ctx.clearRect(0,0,w,h);
+    const petrol = styleColor('--accent','#137A8B');
+    const amber = styleColor('--amber','#E4A93C');
+    for(const d of dots){
+      d.x += d.vx; d.y += d.vy;
+      if(d.x<0||d.x>w) d.vx*=-1;
+      if(d.y<0||d.y>h) d.vy*=-1;
+    }
+    for(let i=0;i<dots.length;i++){
+      for(let j=i+1;j<dots.length;j++){
+        const a=dots[i], b=dots[j];
+        const dist = Math.hypot(a.x-b.x, a.y-b.y);
+        const max = 150*devicePixelRatio;
+        if(dist < max){
+          ctx.strokeStyle = petrol;
+          ctx.globalAlpha = (1 - dist/max) * 0.16;
+          ctx.lineWidth = devicePixelRatio;
+          ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+        }
+      }
+    }
+    ctx.globalAlpha = 1;
+    dots.forEach((d,i) => {
+      ctx.fillStyle = i % 9 === 0 ? amber : petrol;
+      ctx.globalAlpha = i % 9 === 0 ? 0.55 : 0.32;
+      ctx.beginPath(); ctx.arc(d.x,d.y,d.r,0,Math.PI*2); ctx.fill();
+    });
+    ctx.globalAlpha = 1;
+  }
+  if(N>0){
+    resize(); init(); frame();
+    window.addEventListener('resize', () => { resize(); init(); });
+  }
+})();
+</script>
+</body>
+</html>
